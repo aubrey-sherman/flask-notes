@@ -49,6 +49,7 @@ class User(db.Model):
         # password value will be set to hashed password
         return cls(username=username, password=hashed)
 
+    @classmethod
     def authenticate(cls, username, password):
         """
         Authenticate user based on username and password
