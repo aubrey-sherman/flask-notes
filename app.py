@@ -1,6 +1,6 @@
 """Flask Notes App."""
 
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, CSRFProtectionForm
 from models import db, User
 import os
 
@@ -70,7 +70,29 @@ def handle_login():
         if user:
             session['username'] = user.username
             return redirect(f"users/{user.username}")
+
         else:
             form.username.errors = ["Incorrect username or password"]
 
     return render_template('login.jinja', form=form)
+
+
+@app.get("/user/<username>")
+def show_user_info(username):
+    """Show information about user."""
+
+    user = db.get_or_404(User, username)
+
+    return render_template("user_info.jinja", user=user)
+
+
+@app.post("/logout")
+def logout_user():
+    """Log user out of site and redirect to homepage."""
+
+    form = CSRFProtectionForm()
+
+    if form.validate_on_submit():
+        session.pop("username", None)
+
+    return redirect("/")
