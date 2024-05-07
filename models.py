@@ -39,3 +39,14 @@ class User(db.Model):
         db.String(30),
         nullable=False
     )
+
+    @classmethod
+    def register(cls, username, pwd):
+        """Register user with hashed password and return user instance."""
+
+        hashed = bcrypt.generate_password_hash(pwd).decode('utf8')
+
+        # password value will be set to hashed password
+        return cls(username=username, password=hashed)
+
+    # TODO: add a class method for authentication
