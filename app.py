@@ -26,3 +26,16 @@ db.create_all()
 toolbar = DebugToolbarExtension(app)
 
 # routes next!
+
+
+@app.get('/')
+def redirect_to_register():
+    """Redirect to the register route"""
+
+    return redirect('/register')
+
+
+@app.route('/register', methods=["GET", "POST"])
+def show_registration():
+    """Show the registration"""
+
