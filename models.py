@@ -49,4 +49,16 @@ class User(db.Model):
         # password value will be set to hashed password
         return cls(username=username, password=hashed)
 
-    # TODO: add a class method for authentication
+    def authenticate(cls, username, password):
+        """
+        Authenticate user based on username and password
+        Return user instance with username and hashed password
+        """
+
+        q = db.select(cls).filter_by(username=username)
+        user = dbx(q).scalar_one_or_none()
+
+        if user and bcrypt.check_password_hash(user.password, password):
+            return user
+        else:
+            return False

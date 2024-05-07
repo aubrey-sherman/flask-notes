@@ -1,0 +1,13 @@
+{% extends 'base.jinja' %}
+
+{% block title %}
+<h1>User Login</h1>
+{% endblock %}
+
+{% block content %}
+
+<form id="login-form" method="POST">
+    {% include '_form.jinja'%}
+</form>
+
+{% endblock %}

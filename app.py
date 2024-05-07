@@ -1,6 +1,6 @@
 """Flask Notes App."""
 
-from forms import RegistrationForm
+from forms import RegistrationForm, LoginForm
 from models import db, User
 import os
 
@@ -53,3 +53,24 @@ def show_registration():
 
     else:
         return render_template("register.jinja", form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def handle_login():
+    """Show the login form and process logins"""
+
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        user = User.authenticate(username, password)
+
+        if user:
+            session['username'] = user.username
+            return redirect(f"users/{user.username}")
+        else:
+            form.username.errors = ["Incorrect username or password"]
+
+    return render_template('login.jinja', form=form)

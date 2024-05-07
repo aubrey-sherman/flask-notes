@@ -33,3 +33,17 @@ class RegistrationForm(FlaskForm):
         "Last Name",
         validators=[Length(min=1, max=30), InputRequired()]
     )
+
+
+class LoginForm(FlaskForm):
+    """Form to log in a user"""
+
+    username = SelectField(
+        "Username",
+        validators=[
+            Length(min=1, max=20),
+            InputRequired()
+        ]
+    )
+
+    password = PasswordField("Password", validators=[InputRequired()])
