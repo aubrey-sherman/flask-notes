@@ -1,0 +1,19 @@
+{% extends 'base.jinja' %}
+
+{% block title %} User Information {% endblock %}
+
+{% block content %}
+
+<h1>User Information</h1>
+
+<div>
+    <ul>
+        <li>User Name: {{ user.username }}</li>
+        <li>Email: {{ user.email }} </li>
+        <li>First Name: {{ user.first_name }} </li>
+        <li>Last Name: {{ user.last_name }} </li>
+    </ul>
+</div>
+
+
+{% endblock %}

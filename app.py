@@ -1,6 +1,6 @@
 """Flask Notes App."""
 
-from forms import RegistrationForm, LoginForm, CSRFProtectionForm
+from forms import RegistrationForm, LoginForm, CSRFProtectForm
 from models import db, User
 import os
 
@@ -90,7 +90,7 @@ def show_user_info(username):
 def logout_user():
     """Log user out of site and redirect to homepage."""
 
-    form = CSRFProtectionForm()
+    form = CSRFProtectForm()
 
     if form.validate_on_submit():
         session.pop("username", None)
