@@ -47,7 +47,7 @@ class User(db.Model):
         hashed = bcrypt.generate_password_hash(pwd).decode('utf8')
 
         # password value will be set to hashed password
-        return cls(username=username, password=hashed)
+        return cls(username=username, hashed_password=hashed)
 
     @classmethod
     def authenticate(cls, username, password):
@@ -59,7 +59,7 @@ class User(db.Model):
         q = db.select(cls).filter_by(username=username)
         user = dbx(q).scalar_one_or_none()
 
-        if user and bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(user.hashed_password, password):
             return user
         else:
             return False

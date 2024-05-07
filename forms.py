@@ -1,6 +1,6 @@
 """Forms for flask notes"""
 
-from wtforms import SelectField, PasswordField, EmailField
+from wtforms import StringField, PasswordField, EmailField
 from flask_wtf import FlaskForm
 from wtforms.validators import Length, InputRequired
 
@@ -8,7 +8,7 @@ from wtforms.validators import Length, InputRequired
 class RegistrationForm(FlaskForm):
     """Form to register a new user"""
 
-    username = SelectField(
+    username = StringField(
         "Username",
         validators=[
             Length(min=1, max=20),
@@ -24,12 +24,12 @@ class RegistrationForm(FlaskForm):
         validators=[Length(min=1, max=50), InputRequired()]
     )
 
-    first_name = SelectField(
+    first_name = StringField(
         "First Name",
         validators=[Length(min=1, max=30), InputRequired()]
     )
 
-    last_name = SelectField(
+    last_name = StringField(
         "Last Name",
         validators=[Length(min=1, max=30), InputRequired()]
     )
@@ -38,7 +38,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     """Form to log in a user"""
 
-    username = SelectField(
+    username = StringField(
         "Username",
         validators=[
             Length(min=1, max=20),

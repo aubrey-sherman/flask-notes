@@ -23,6 +23,7 @@ app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 app.app_context().push()
 db.create_all()
 
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 toolbar = DebugToolbarExtension(app)
 
 
@@ -48,6 +49,8 @@ def show_registration():
 
         db.session.add(new_user)
         db.session.commit()
+
+        flash(f"User {new_user.username} created!")
 
         return redirect(f"/users/{new_user.username}")
 
@@ -77,13 +80,20 @@ def handle_login():
     return render_template('login.jinja', form=form)
 
 
-@app.get("/user/<username>")
+@app.get("/users/<username>")
 def show_user_info(username):
-    """Show information about user."""
+    """Show information about user if the user is logged in."""
 
     user = db.get_or_404(User, username)
 
-    return render_template("user_info.jinja", user=user)
+    if session.get('username') == username:
+        form = CSRFProtectForm()
+
+        return render_template("user_info.jinja", user=user, form=form)
+
+    else:
+        flash('Not logged in!')
+        return redirect('/')
 
 
 @app.post("/logout")
