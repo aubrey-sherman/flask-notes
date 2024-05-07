@@ -1,5 +1,6 @@
 """Flask Notes App."""
 
+from forms import RegistrationForm
 from models import db, User
 import os
 
@@ -9,7 +10,6 @@ from flask_debugtoolbar import DebugToolbarExtension
 from dotenv import load_dotenv
 load_dotenv()
 
-# from forms import
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
@@ -25,8 +25,6 @@ db.create_all()
 
 toolbar = DebugToolbarExtension(app)
 
-# routes next!
-
 
 @app.get('/')
 def redirect_to_register():
@@ -39,3 +37,19 @@ def redirect_to_register():
 def show_registration():
     """Show the registration"""
 
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+
+        new_user = User.register(form.username.data, form.password.data)
+        new_user.email = form.email.data
+        new_user.first_name = form.first_name.data
+        new_user.last_name = form.last_name.data
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(f"/users/{new_user.username}")
+
+    else:
+        return render_template("register.jinja", form=form)
