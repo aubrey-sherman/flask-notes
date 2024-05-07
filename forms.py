@@ -21,14 +21,15 @@ class RegistrationForm(FlaskForm):
     # TODO: does EmailField automatically validate the input was an email
     email = EmailField(
         "Email",
-        validators=[Length(min=1, max=50)])
+        validators=[Length(min=1, max=50), InputRequired()]
+    )
 
     first_name = SelectField(
         "First Name",
-        validators=[Length(min=1, max=30)]
+        validators=[Length(min=1, max=30), InputRequired()]
     )
 
     last_name = SelectField(
         "Last Name",
-        validators=[Length(min=1, max=30)]
+        validators=[Length(min=1, max=30), InputRequired()]
     )
