@@ -2,7 +2,7 @@
 
 from wtforms import StringField, PasswordField, EmailField
 from flask_wtf import FlaskForm
-from wtforms.validators import Length, InputRequired
+from wtforms.validators import Length, InputRequired, Email
 
 
 class RegistrationForm(FlaskForm):
@@ -21,7 +21,7 @@ class RegistrationForm(FlaskForm):
     # TODO: does EmailField automatically validate the input was an email
     email = EmailField(
         "Email",
-        validators=[Length(min=1, max=50), InputRequired()]
+        validators=[Length(min=1, max=50), InputRequired(), Email()]
     )
 
     first_name = StringField(
