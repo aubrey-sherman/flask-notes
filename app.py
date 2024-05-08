@@ -20,9 +20,6 @@ db.init_app(app)
 
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
-app.app_context().push()
-db.create_all()
-
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 toolbar = DebugToolbarExtension(app)
 
