@@ -55,6 +55,7 @@ class User(db.Model):
         Authenticate user based on username and password
         Return user instance with username and hashed password
         """
+        # TODO: Add to docstring how we're handling nonauthenticated users
 
         q = db.select(cls).filter_by(username=username)
         user = dbx(q).scalar_one_or_none()

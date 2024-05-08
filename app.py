@@ -42,20 +42,28 @@ def show_registration():
 
     if form.validate_on_submit():
 
-        new_user = User.register(form.username.data, form.password.data)
-        new_user.email = form.email.data
-        new_user.first_name = form.first_name.data
-        new_user.last_name = form.last_name.data
+        # catch user trying to make duplicate username
+        if db.session.get(User, form.username.data):
+            flash(f"Username {form.username.data} already exists.")
 
-        db.session.add(new_user)
-        db.session.commit()
+        else:
+            # TODO: Consider separation of concerns, moving db work to Models
+            # Pass all data into register method, rather than partial data
+            # Common pattern is adding in models, committing in route
+            new_user = User.register(form.username.data, form.password.data)
+            new_user.email = form.email.data
+            new_user.first_name = form.first_name.data
+            new_user.last_name = form.last_name.data
 
-        flash(f"User {new_user.username} created!")
+            db.session.add(new_user)
+            db.session.commit()
+            session['username'] = new_user.username
 
-        return redirect(f"/users/{new_user.username}")
+            flash(f"User {new_user.username} created!")
 
-    else:
-        return render_template("register.jinja", form=form)
+            return redirect(f"/users/{new_user.username}")
+
+    return render_template("register.jinja", form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,16 +92,23 @@ def handle_login():
 def show_user_info(username):
     """Show information about user if the user is logged in."""
 
+    # FIXME: Security hole; first check if the viewer is logged in, then authorized
+    # Reorder logic so unauthorized users don't get any information from you
     user = db.get_or_404(User, username)
 
-    if session.get('username') == username:
+    current_user = session.get('username')
+
+    if current_user == username:
         form = CSRFProtectForm()
 
         return render_template("user_info.jinja", user=user, form=form)
 
-    else:
-        flash('Not logged in!')
-        return redirect('/')
+    elif current_user:
+        flash("You're not authorized to view this page.")
+        return redirect(f"/users/{current_user}")
+
+    flash('Not logged in!')
+    return redirect('/register')
 
 
 @app.post("/logout")
@@ -105,4 +120,6 @@ def logout_user():
     if form.validate_on_submit():
         session.pop("username", None)
 
-    return redirect("/")
+    # FIXME: Include a fail case here: What if you can't log out bc of a bad form?
+    # Add an UnauthorizedError
+    return redirect("/register")
